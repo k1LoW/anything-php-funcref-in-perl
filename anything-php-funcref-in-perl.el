@@ -47,6 +47,7 @@
 
 (defvar anything-php-funcref-in-perl-docs "~/repos/docs-php-funcref-in-perl/docs/")
 (defvar anything-php-funcref-in-perl-docs-template "~/repos/docs-php-funcref-in-perl/docs-template/")
+(defvar anything-php-funcref-in-perl-docs-persistent-action-buffer "*anything-php-funcref-in-perl-docs-tmp*")
 
 (defun anything-php-funcref-in-perl ()
   (interactive)
@@ -64,7 +65,9 @@
                      anything-php-funcref-in-perl-docs)))
     (display-to-real . (lambda (candidate)
                          (concat anything-php-funcref-in-perl-docs candidate ".txt")))
-    (type . file)))
+    (type . file)
+    (persistent-action . anything-php-funcref-in-perl-docs-persistent-action)
+    (cleanup . anything-php-funcref-in-perl-docs-cleanup)))
 ;;(anything 'anything-c-source-php-funcref-in-perl-docs)
 
 (defvar anything-c-source-php-funcref-in-perl-docs-template
@@ -92,8 +95,9 @@
                         ;;(call-process "git" nil t t "mv" (expand-file-name candidate) (expand-file-name docs-path))
                         (call-process "mv" nil nil nil (expand-file-name candidate) (expand-file-name docs-path))
                         (find-file docs-path)
-                      ))))
-)))
+                      )))))
+    (persistent-action . anything-php-funcref-in-perl-docs-persistent-action)
+    (cleanup . anything-php-funcref-in-perl-docs-cleanup)))
 ;;(anything 'anything-c-source-php-funcref-in-perl-docs-template)
 
 (defun anything-php-funcref-in-perl-file-list (file-list path)
@@ -114,5 +118,17 @@
                (if (string-match (concat (expand-file-name path) "\\(.+\\)\\.txt$") x)
                    (setq path-list (push (match-string 1 x) path-list)))))
     (nreverse path-list)))
+
+(defun anything-php-funcref-in-perl-docs-persistent-action (candidate)
+  (let ((buffer (get-buffer-create anything-php-funcref-in-perl-docs-persistent-action-buffer)))
+      (with-current-buffer buffer
+        (erase-buffer)
+        (insert-file-contents candidate)
+        (goto-char (point-min)))
+      (pop-to-buffer buffer)))
+
+(defun anything-php-funcref-in-perl-docs-cleanup ()
+  (if (get-buffer anything-php-funcref-in-perl-docs-persistent-action-buffer)
+    (kill-buffer anything-php-funcref-in-perl-docs-persistent-action-buffer)))
 
 (provide 'anything-php-funcref-in-perl)
