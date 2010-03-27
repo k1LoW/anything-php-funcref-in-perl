@@ -45,6 +45,7 @@
 (require 'anything)
 (require 'cl)
 
+(defvar anything-php-funcref-in-perl-docs-git-repo "~/repo/docs-php-funcref-in-perl/")
 (defvar anything-php-funcref-in-perl-docs "~/repos/docs-php-funcref-in-perl/docs/")
 (defvar anything-php-funcref-in-perl-docs-template "~/repos/docs-php-funcref-in-perl/docs-template/")
 (defvar anything-php-funcref-in-perl-docs-persistent-action-buffer "*anything-php-funcref-in-perl-docs-tmp*")
@@ -92,8 +93,10 @@
                             (message "no git command.")
                         (unless (file-directory-p dir)
                           (make-directory dir))
-                        ;;(call-process "git" nil t t "mv" (expand-file-name candidate) (expand-file-name docs-path))
-                        (call-process "mv" nil nil nil (expand-file-name candidate) (expand-file-name docs-path))
+                        (with-temp-buffer
+                          (cd anything-php-funcref-in-perl-docs-git-repo)
+                          (call-process "git" nil t t "mv" (expand-file-name candidate) (expand-file-name docs-path))  
+                          (message "%s" (buffer-string)))
                         (find-file docs-path)
                       )))))
     (persistent-action . anything-php-funcref-in-perl-docs-persistent-action)
