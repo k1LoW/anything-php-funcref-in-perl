@@ -89,16 +89,16 @@
                                   "docs-template/"
                                   "docs/"
                                   candidate)))
-                        (if (not (executable-find "git"))
-                            (message "no git command.")
-                        (unless (file-directory-p dir)
-                          (make-directory dir))
-                        (with-temp-buffer
-                          (cd anything-php-funcref-in-perl-docs-git-repo)
-                          (call-process "git" nil t t "mv" (expand-file-name candidate) (expand-file-name docs-path))  
-                          (message "%s" (buffer-string)))
-                        (find-file docs-path)
-                      )))))
+                        (if (and (executable-find "git") (y-or-n-p "Execute 'git mv'? "))
+                            (progn 
+                              (unless (file-directory-p dir)
+                                (make-directory dir))
+                              (with-temp-buffer
+                                (cd anything-php-funcref-in-perl-docs-git-repo)
+                                (call-process "git" nil t t "mv" (expand-file-name candidate) (expand-file-name docs-path))  
+                                (message "%s" (buffer-string)))
+                              (find-file docs-path))
+                          (find-file candidate))))))
     (persistent-action . anything-php-funcref-in-perl-docs-persistent-action)
     (cleanup . anything-php-funcref-in-perl-docs-cleanup)))
 ;;(anything 'anything-c-source-php-funcref-in-perl-docs-template)
