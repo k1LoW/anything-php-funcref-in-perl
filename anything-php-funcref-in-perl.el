@@ -17,8 +17,9 @@
 ;; along with this program; if not, write to the Free Software
 ;; Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 ;;
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Author: k1LoW (Kenichirou Oyama), <k1lowxb [at] gmail [dot] com> <k1low [at] 101000lab [dot] org>
+;;         kitokitoki, <morihenotegami@gmail.com>
 ;; URL: http://code.101000lab.org
 
 ;;; Install
@@ -38,6 +39,7 @@
 ;;
 
 ;;; Change Log
+;; 0.0.2 Apply kitokitoki branch.
 ;; 0.0.1 First released.
 
 ;;; Code:
@@ -45,7 +47,7 @@
 (require 'anything)
 (require 'cl)
 
-(defvar anything-php-funcref-in-perl-docs-git-repo "~/repo/docs-php-funcref-in-perl/")
+(defvar anything-php-funcref-in-perl-docs-git-repo "~/repos/docs-php-funcref-in-perl/")
 (defvar anything-php-funcref-in-perl-docs "~/repos/docs-php-funcref-in-perl/docs/")
 (defvar anything-php-funcref-in-perl-docs-template "~/repos/docs-php-funcref-in-perl/docs-template/")
 (defvar anything-php-funcref-in-perl-docs-persistent-action-buffer "*anything-php-funcref-in-perl-docs-tmp*")
@@ -90,12 +92,12 @@
                                   "docs/"
                                   candidate)))
                         (if (and (executable-find "git") (y-or-n-p "Execute 'git mv'? "))
-                            (progn 
+                            (progn
                               (unless (file-directory-p dir)
                                 (make-directory dir))
                               (with-temp-buffer
                                 (cd anything-php-funcref-in-perl-docs-git-repo)
-                                (call-process "git" nil t t "mv" (expand-file-name candidate) (expand-file-name docs-path))  
+                                (call-process "git" nil t t "mv" (expand-file-name candidate) (expand-file-name docs-path))
                                 (message "%s" (buffer-string)))
                               (find-file docs-path))
                           (find-file candidate))))))
