@@ -131,7 +131,7 @@
       (pop-to-buffer buffer)))
 
 (defun anything-php-funcref-in-perl-docs-cleanup ()
-  (if (get-buffer anything-php-funcref-in-perl-docs-persistent-action-buffer)
-    (kill-buffer anything-php-funcref-in-perl-docs-persistent-action-buffer)))
+  (anything-aif (get-buffer anything-php-funcref-in-perl-docs-persistent-action-buffer)
+    (kill-buffer it)))
 
 (provide 'anything-php-funcref-in-perl)
